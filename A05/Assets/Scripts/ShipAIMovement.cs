@@ -1,0 +1,136 @@
+﻿using UnityEngine;
+using System.Collections;
+using UnityEngine.UI;
+
+public class ShipAIMovement : MonoBehaviour
+{
+    public Vector3 netForces;
+    public float gravity;
+    public float mass;
+    public float seaLevel;
+    public float friction;
+    public float acceleration;
+    public float maxTurnSpeed;
+    public float topSpeed;
+    public bool leader;
+    public Transform target;
+    public GameObject gameManager;
+    bool reverse;
+    float turnSpeed;
+    public CharacterController controller;
+    // Use this for initialization
+    void Start()
+    {
+        netForces = new Vector3(0f, 0f, 0f);
+        gravity = 9.81f;
+        leader = false;
+        gameManager = GameObject.Find("GameManager");
+        RandomizePos();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        target = gameManager.GetComponent<GameManager>().GetNearestWayPoint(transform);
+        Debug.Log(target.position);
+        /*
+        ApplyForces(gameObject.transform.forward.normalized * mass * acceleration * Time.deltaTime);
+
+        ApplyForces(gameObject.transform.forward.normalized * mass * -acceleration * .45f * Time.deltaTime);
+
+        if (turnSpeed > -maxTurnSpeed)
+        {
+            turnSpeed -= maxTurnSpeed * Time.deltaTime / 4;
+            if (turnSpeed < -maxTurnSpeed)
+            {
+                turnSpeed = -maxTurnSpeed;
+            }
+
+        }
+        if (turnSpeed < maxTurnSpeed)
+        {
+            turnSpeed += maxTurnSpeed * Time.deltaTime / 4;
+            if (turnSpeed > maxTurnSpeed)
+            {
+                turnSpeed = maxTurnSpeed;
+            }
+        }*/
+        if (target != transform)
+        {
+            //stopping distance
+            float stoppingDistance = Mathf.Pow((new Vector3(netForces.x, 0f, netForces.z).magnitude) / mass, 2f) / (2f * -acceleration * .45f);
+            if(Vector3.Distance(transform.position, target.position) > stoppingDistance)
+            {
+                ApplyForces((target.position - transform.position).normalized * mass * acceleration * Time.deltaTime);
+            }else
+            {
+                ApplyForces(-(target.position - transform.position).normalized * mass * acceleration * Time.deltaTime);
+            }
+
+        }
+        if(turnSpeed > 0f)
+        {
+            turnSpeed -= turnSpeed * .3f * Time.deltaTime;
+            if(turnSpeed < 0f)
+            {
+                turnSpeed = 0f;
+            }
+        }
+
+        //speed limiter
+        netForces = Quaternion.Euler(0f, turnSpeed * Time.deltaTime, 0f) * netForces;
+        if(netForces.magnitude > mass * topSpeed)
+        {
+            netForces = netForces.normalized * mass * topSpeed;
+        }
+
+        //friction of water
+        if (netForces.magnitude > 0f)
+        {
+            netForces.x -= netForces.x * friction * Time.deltaTime;
+            netForces.z -= netForces.z * friction * Time.deltaTime;
+        }
+        //gravity
+        netForces += new Vector3(0f, -gravity * mass * Time.deltaTime, 0f);
+        //buoyancy
+        float height = transform.position.y - seaLevel;
+        if (height <= 2f)
+        {
+            netForces += new Vector3(0f, gravity * mass * Time.deltaTime + -2f * height * mass * Time.deltaTime, 0f);
+        }
+        if (netForces.x < .0001f && netForces.x > -.0001f)
+        {
+            netForces.x = 0f;
+        }
+        if (netForces.y < .0001f && netForces.y > -.0001f)
+        {
+            netForces.y = 0f;
+        }
+        if (netForces.z < .0001f && netForces.z > -.0001f)
+        {
+            netForces.z = 0f;
+        }
+        float speed = Vector3.Dot(transform.forward, netForces);
+        if(speed > 0)
+        {
+            transform.rotation = Quaternion.LookRotation(new Vector3(netForces.x, 0f, netForces.z));
+        }else
+        {
+            transform.rotation = Quaternion.LookRotation(new Vector3(-netForces.x, 0f, -netForces.z));
+        }
+
+
+        transform.Rotate(-height * 40f * Time.deltaTime, 0f, 0f);
+        transform.Rotate(0f, 0f, turnSpeed / maxTurnSpeed * 360f * Time.deltaTime);
+        transform.position += netForces / mass * Time.deltaTime;
+    }
+    void ApplyForces(Vector3 force)
+    {
+        netForces += force;
+    }
+    public void RandomizePos()
+    {
+        gameObject.transform.position = new Vector3(Random.Range(10f, GameObject.Find("Terrain").GetComponent<Terrain>().terrainData.size.x - 10f), 200.5f, Random.Range(10f, GameObject.Find("Terrain").GetComponent<Terrain>().terrainData.size.z - 10f));
+        gameObject.transform.rotation = Quaternion.Euler(new Vector3(0f, Random.Range(0f, 360f), 0f));
+    }
+}
