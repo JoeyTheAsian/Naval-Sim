@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour {
     public Terrain myTerrain;
     public GameObject waypoint;
     public Terrain terrain;
+    public float wayPointRadius;
 
     public GameObject hordeLeader;
 

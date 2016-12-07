@@ -36,7 +36,7 @@ public class ShipMovement : MonoBehaviour
         {
             ApplyForces(gameObject.transform.forward.normalized * mass * -acceleration * .45f * Time.deltaTime);
         }
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.A) && new Vector3(netForces.x, 0f, netForces.z).magnitude > 0f)
         {
             if (turnSpeed > -maxTurnSpeed)
             {
@@ -47,7 +47,7 @@ public class ShipMovement : MonoBehaviour
                 }
             }
         }
-        else if (Input.GetKey(KeyCode.D))
+        else if (Input.GetKey(KeyCode.D) && new Vector3(netForces.x, 0f, netForces.z).magnitude > 0f)
         {
             if (turnSpeed < maxTurnSpeed)
             {
@@ -104,7 +104,7 @@ public class ShipMovement : MonoBehaviour
 
 
         transform.Rotate(-height * 40f * Time.deltaTime, 0f, 0f);
-        transform.Rotate(0f, 0f, turnSpeed / maxTurnSpeed * 360f * Time.deltaTime);
+        transform.Rotate(0f, 0f,-turnSpeed / maxTurnSpeed * 180f * Time.deltaTime);
         transform.position += netForces / mass * Time.deltaTime;
         speedo.text = "SPEED: " + (int)(Mathf.Abs(speed)/mass) + " KNOTS";
     }

@@ -32,7 +32,7 @@ public class ShipAIMovement : MonoBehaviour
     void Update()
     {
         target = gameManager.GetComponent<GameManager>().GetNearestWayPoint(transform);
-        Debug.Log(target.position);
+        //Debug.Log(target.position);
         /*
         ApplyForces(gameObject.transform.forward.normalized * mass * acceleration * Time.deltaTime);
 
@@ -55,8 +55,13 @@ public class ShipAIMovement : MonoBehaviour
                 turnSpeed = maxTurnSpeed;
             }
         }*/
+        float direction = Mathf.Acos(netForces.normalized.x);
         if (target != transform)
         {
+            if (Vector3.Distance(target.position, transform.position) <= GameObject.Find("GameManager").GetComponent<GameManager>().wayPointRadius)
+            {
+                target = transform;
+            }
             //stopping distance
             float stoppingDistance = Mathf.Pow((new Vector3(netForces.x, 0f, netForces.z).magnitude) / mass, 2f) / (2f * -acceleration * .45f);
             if(Vector3.Distance(transform.position, target.position) > stoppingDistance)
@@ -66,12 +71,36 @@ public class ShipAIMovement : MonoBehaviour
             {
                 ApplyForces(-(target.position - transform.position).normalized * mass * acceleration * Time.deltaTime);
             }
-
         }
-        if(turnSpeed > 0f)
+        if (Mathf.Abs(Mathf.Acos(netForces.normalized.x) - direction) > turnSpeed * Time.deltaTime)
         {
-            turnSpeed -= turnSpeed * .3f * Time.deltaTime;
-            if(turnSpeed < 0f)
+            if (turnSpeed < maxTurnSpeed)
+            {
+                turnSpeed += maxTurnSpeed * Time.deltaTime / 4;
+                if (turnSpeed > maxTurnSpeed)
+                {
+                    turnSpeed = maxTurnSpeed;
+                }
+            }
+            if (Mathf.Acos(netForces.normalized.x) - (direction / 360f * 2f * Mathf.PI)> 0 && new Vector3(netForces.x, 0f, netForces.z).magnitude > 0f)
+            {
+                direction += turnSpeed / 360f * 2f * Mathf.PI * Time.deltaTime;
+                Debug.Log("1");
+            }
+            else
+            {
+                direction -= turnSpeed/360f * 2f * Mathf.PI* Time.deltaTime;
+                Debug.Log("2");
+            }
+            Vector3 newForces = new Vector3(Mathf.Cos(direction) * netForces.magnitude, 0f, Mathf.Sin(direction) * netForces.magnitude);
+            netForces.x = 0f; netForces.z = 0f;
+            ApplyForces(newForces);
+        }
+
+        if (turnSpeed > 0f)
+        {
+            turnSpeed -= turnSpeed * .5f * Time.deltaTime;
+            if (turnSpeed < 0f)
             {
                 turnSpeed = 0f;
             }

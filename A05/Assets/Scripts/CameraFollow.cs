@@ -19,7 +19,7 @@ public class CameraFollow: MonoBehaviour {
             }
             else
             {
-                target = GameObject.Find("Yamato").transform;
+                target = GameObject.Find("New Jersey").transform;
             }
         }
         // Early exit if there’s no target
@@ -35,7 +35,7 @@ public class CameraFollow: MonoBehaviour {
         // Adjust the height of the camera
         transform.position = new Vector3(transform.position.x, currentHeight, transform.position.z);
         // Set the forward to rotate with time
-        //transform.forward = Vector3.Lerp(transform.forward, new Vector3(target.position.x - transform.position.x, 0f, target.position.z - transform.position.z).normalized, Time.deltaTime * rotationDamping);
+        transform.forward = Vector3.Lerp(transform.forward, new Vector3(target.position.x - transform.position.x, 0f, target.position.z - transform.position.z).normalized, Time.deltaTime * rotationDamping);
         if (!isAerial)
         {
             transform.Rotate(new Vector3(transform.rotation.x, 0f, 0f));
