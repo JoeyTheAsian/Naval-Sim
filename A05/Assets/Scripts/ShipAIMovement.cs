@@ -31,8 +31,8 @@ public class ShipAIMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //set target to closest waypoint
         target = gameManager.GetComponent<GameManager>().GetNearestWayPoint(transform);
-        //Debug.Log(target.position);
         /*
         ApplyForces(gameObject.transform.forward.normalized * mass * acceleration * Time.deltaTime);
 
@@ -55,6 +55,7 @@ public class ShipAIMovement : MonoBehaviour
                 turnSpeed = maxTurnSpeed;
             }
         }*/
+        /*
 		float direction = Mathf.Acos(new Vector3 (netForces.x, 0f, netForces.z).normalized.x);
         if (target != transform)
         {
@@ -81,7 +82,49 @@ public class ShipAIMovement : MonoBehaviour
 			netForces.x = 0f;
 			netForces.z = 0f;
 			ApplyForces (newForces);
-		}
+		}*/
+        float direction = Mathf.Acos(new Vector3(netForces.x, 0f, netForces.z).normalized.x);
+        if (target != transform)
+        {
+            //if you're within the bounding circle, stop moving
+            if (Vector3.Distance(target.position, transform.position) <= GameObject.Find("GameManager").GetComponent<GameManager>().wayPointRadius)
+            {
+                target = transform;
+            }
+            if (Vector3.Distance(transform.position, target.position) > stoppingDistance)
+            {
+                ApplyForces((target.position - transform.position).normalized * mass * acceleration * Time.deltaTime);
+            }
+            else
+            {
+                ApplyForces(-(target.position - transform.position).normalized * mass * acceleration * Time.deltaTime);
+            }
+            float newDirection = Mathf.Acos(new Vector3(netForces.x, 0f, netForces.z).normalized.x);
+            float diff = newDirection - direction;
+            bool anti = false;
+            if(diff > 180f)
+            {
+                diff = 360f - diff;
+            }else if(diff < -180f)
+            {
+                diff = 360f + diff;
+            }
+            if(diff < 0)
+            {
+                anti = true;
+            }else
+            {
+                anti = false;
+            }
+            direction += diff;
+
+
+
+        }
+        else
+        {
+            netForces *= .97f;
+        }
         if (turnSpeed > 0f)
         {
             turnSpeed -= turnSpeed * .5f * Time.deltaTime;
