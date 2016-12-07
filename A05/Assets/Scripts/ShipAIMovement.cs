@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
@@ -55,7 +55,7 @@ public class ShipAIMovement : MonoBehaviour
                 turnSpeed = maxTurnSpeed;
             }
         }*/
-        float direction = Mathf.Acos(netForces.normalized.x);
+		float direction = Mathf.Acos(new Vector3 (netForces.x, 0f, netForces.z).normalized.x);
         if (target != transform)
         {
             if (Vector3.Distance(target.position, transform.position) <= GameObject.Find("GameManager").GetComponent<GameManager>().wayPointRadius)
@@ -72,31 +72,16 @@ public class ShipAIMovement : MonoBehaviour
                 ApplyForces(-(target.position - transform.position).normalized * mass * acceleration * Time.deltaTime);
             }
         }
-        if (Mathf.Abs(Mathf.Acos(netForces.normalized.x) - direction) > turnSpeed * Time.deltaTime)
-        {
-            if (turnSpeed < maxTurnSpeed)
-            {
-                turnSpeed += maxTurnSpeed * Time.deltaTime / 4;
-                if (turnSpeed > maxTurnSpeed)
-                {
-                    turnSpeed = maxTurnSpeed;
-                }
-            }
-            if (Mathf.Acos(netForces.normalized.x) - (direction / 360f * 2f * Mathf.PI)> 0 && new Vector3(netForces.x, 0f, netForces.z).magnitude > 0f)
-            {
-                direction += turnSpeed / 360f * 2f * Mathf.PI * Time.deltaTime;
-                Debug.Log("1");
-            }
-            else
-            {
-                direction -= turnSpeed/360f * 2f * Mathf.PI* Time.deltaTime;
-                Debug.Log("2");
-            }
-            Vector3 newForces = new Vector3(Mathf.Cos(direction) * netForces.magnitude, 0f, Mathf.Sin(direction) * netForces.magnitude);
-            netForces.x = 0f; netForces.z = 0f;
-            ApplyForces(newForces);
-        }
-
+		float targetDirection = Mathf.Acos ((target.position - transform.position).normalized.x);
+		if (Mathf.Abs (Mathf.Acos (new Vector3 (netForces.x, 0f, netForces.z).normalized.x) - direction) > turnSpeed /360f * 2f * Mathf.PI) {
+			turnSpeed += maxTurnSpeed * Time.deltaTime / 4;
+			direction += turnSpeed/360f * 2f * Mathf.PI;
+			float magnitude =new Vector3(netForces.x, 0f, netForces.z).magnitude;
+			Vector3 newForces = new Vector3(Mathf.Cos (direction) * magnitude, 0f, Mathf.Sin (direction)*magnitude);
+			netForces.x = 0f;
+			netForces.z = 0f;
+			ApplyForces (newForces);
+		}
         if (turnSpeed > 0f)
         {
             turnSpeed -= turnSpeed * .5f * Time.deltaTime;
