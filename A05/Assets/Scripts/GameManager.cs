@@ -58,7 +58,8 @@ public class GameManager : MonoBehaviour {
             if (terrain.GetComponent<Collider>().Raycast(ray, out hit, Mathf.Infinity))
             {
                 GameObject wp = Instantiate(waypoint);
-                wp.transform.position = hit.point + new Vector3(0f, 50f, 0f);
+                wp.transform.position = hit.point;
+                wp.transform.position = new Vector3(wp.transform.position.x, 210f, wp.transform.position.z);
                 waypoints.Add(wp);
             }
         }

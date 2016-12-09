@@ -190,8 +190,8 @@ MonoBehaviour:
   seaLevel: 191.5
   friction: .100000001
   acceleration: 5
-  maxTurnSpeed: 15
-  topSpeed: 24
+  maxTurnSpeed: 25
+  topSpeed: 50
   speedo: {fileID: 0}
   controller: {fileID: 14348224}
 --- !u!143 &14348224
@@ -237,6 +237,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_Height
       value: .100000001
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: topSpeed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: maxTurnSpeed
+      value: 25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

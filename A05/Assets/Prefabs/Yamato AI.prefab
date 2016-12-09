@@ -190,8 +190,8 @@ MonoBehaviour:
   seaLevel: 200
   friction: .100000001
   acceleration: 5
-  maxTurnSpeed: 13
-  topSpeed: 24
+  maxTurnSpeed: 25
+  topSpeed: 50
   leader: 0
   target: {fileID: 0}
   gameManager: {fileID: 0}
@@ -239,6 +239,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_Height
       value: .100000001
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: maxTurnSpeed
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: topSpeed
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

@@ -32,7 +32,7 @@ public class ShipAIMovement : MonoBehaviour
     void Update()
     {
         //set target to closest waypoint
-        target = gameManager.GetComponent<GameManager>().GetNearestWayPoint(transform);
+
         /*
         ApplyForces(gameObject.transform.forward.normalized * mass * acceleration * Time.deltaTime);
 
@@ -84,13 +84,49 @@ public class ShipAIMovement : MonoBehaviour
 			ApplyForces (newForces);
 		}*/
         float direction = Mathf.Acos(new Vector3(netForces.x, 0f, netForces.z).normalized.x);
+        if (netForces.x == 0f && netForces.z == 0f)
+        {
+            direction = transform.rotation.y;
+        }
+        if (target == null)
+        {
+            ToNearest();
+        }
         if (target != transform)
         {
-            //if you're within the bounding circle, stop moving
-            if (Vector3.Distance(target.position, transform.position) <= GameObject.Find("GameManager").GetComponent<GameManager>().wayPointRadius)
+            if(Vector3.Distance(transform.position, target.position) > 500f)
             {
-                target = transform;
+                ToNearest();
             }
+            int index = GameObject.Find("GameManager").GetComponent<GameManager>().waypoints.IndexOf(target.gameObject);
+            GameManager gm = GameObject.Find("GameManager").GetComponent<GameManager>();
+            if (index >= gm.waypoints.Count-1) {
+                if (Vector3.Distance(transform.position, gm.waypoints[0].transform.position) < Vector3.Distance(transform.position, target.position))
+                {
+                    target = gm.waypoints[0].transform;
+                }
+            }
+            else
+            {
+                if (Vector3.Distance(transform.position, gm.waypoints[index + 1].transform.position) < Vector3.Distance(transform.position, target.position))
+                {
+                    target = gm.waypoints[index + 1].transform;
+                }
+            }
+             //if you're within the bounding circle, stop moving
+            if (Vector3.Distance(target.position, transform.position) <= GameObject.Find("GameManager").GetComponent<GameManager>().wayPointRadius)
+            { 
+                if (index >= gm.waypoints.Count-1)
+                {
+                    target = gm.waypoints[0].transform;
+                }
+                else
+                {
+                    target = gm.waypoints[index + 1].transform;
+                }
+            }
+            //stopping distance
+            float stoppingDistance = Mathf.Pow((new Vector3(netForces.x, 0f, netForces.z).magnitude) / mass, 2f) / (2f * -acceleration * .45f);
             if (Vector3.Distance(transform.position, target.position) > stoppingDistance)
             {
                 ApplyForces((target.position - transform.position).normalized * mass * acceleration * Time.deltaTime);
@@ -102,28 +138,26 @@ public class ShipAIMovement : MonoBehaviour
             float newDirection = Mathf.Acos(new Vector3(netForces.x, 0f, netForces.z).normalized.x);
             float diff = newDirection - direction;
             bool anti = false;
-            if(diff > 180f)
+            if (diff > 180f)
             {
                 diff = 360f - diff;
-            }else if(diff < -180f)
+            } else if (diff < -180f)
             {
                 diff = 360f + diff;
             }
-            if(diff < 0)
+            if (diff < 0)
             {
                 anti = true;
-            }else
+            } else
             {
                 anti = false;
             }
             direction += diff;
-
-
-
         }
         else
         {
             netForces *= .97f;
+            ToNearest();
         }
         if (turnSpeed > 0f)
         {
@@ -136,7 +170,7 @@ public class ShipAIMovement : MonoBehaviour
 
         //speed limiter
         netForces = Quaternion.Euler(0f, turnSpeed * Time.deltaTime, 0f) * netForces;
-        if(netForces.magnitude > mass * topSpeed)
+        if (netForces.magnitude > mass * topSpeed)
         {
             netForces = netForces.normalized * mass * topSpeed;
         }
@@ -168,14 +202,14 @@ public class ShipAIMovement : MonoBehaviour
             netForces.z = 0f;
         }
         float speed = Vector3.Dot(transform.forward, netForces);
-        if(speed > 0)
+        if (speed > 0)
         {
             transform.rotation = Quaternion.LookRotation(new Vector3(netForces.x, 0f, netForces.z));
-        }else
+        }
+        else
         {
             transform.rotation = Quaternion.LookRotation(new Vector3(-netForces.x, 0f, -netForces.z));
         }
-
 
         transform.Rotate(-height * 40f * Time.deltaTime, 0f, 0f);
         transform.Rotate(0f, 0f, turnSpeed / maxTurnSpeed * 360f * Time.deltaTime);
@@ -189,5 +223,9 @@ public class ShipAIMovement : MonoBehaviour
     {
         gameObject.transform.position = new Vector3(Random.Range(10f, GameObject.Find("Terrain").GetComponent<Terrain>().terrainData.size.x - 10f), 200.5f, Random.Range(10f, GameObject.Find("Terrain").GetComponent<Terrain>().terrainData.size.z - 10f));
         gameObject.transform.rotation = Quaternion.Euler(new Vector3(0f, Random.Range(0f, 360f), 0f));
+    }
+    public void ToNearest()
+    {
+        target = gameManager.GetComponent<GameManager>().GetNearestWayPoint(transform);
     }
 }
