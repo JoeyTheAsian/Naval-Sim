@@ -12,7 +12,9 @@ public class ShipMovement : MonoBehaviour
     public float acceleration;
     public float maxTurnSpeed;
     public float topSpeed;
+    public Material matRed;
     public Text speedo;
+    public bool leader = false;
     bool reverse;
     float turnSpeed;
     public CharacterController controller;
@@ -28,7 +30,12 @@ public class ShipMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            //make this ship the leader
+            leader = !leader;
+        }
+            if (Input.GetKey(KeyCode.W))
         {
             ApplyForces(gameObject.transform.forward.normalized * mass * acceleration * Time.deltaTime);
         }
@@ -104,12 +111,33 @@ public class ShipMovement : MonoBehaviour
 
 
         transform.Rotate(-height * 40f * Time.deltaTime, 0f, 0f);
-        transform.Rotate(0f, 0f,-turnSpeed / maxTurnSpeed * 180f * Time.deltaTime);
+        transform.Rotate(0f, 0f,-turnSpeed / maxTurnSpeed * 360f * Time.deltaTime);
         transform.position += netForces / mass * Time.deltaTime;
         speedo.text = "SPEED: " + (int)(Mathf.Abs(speed)/mass) + " KNOTS";
     }
     void ApplyForces(Vector3 force)
     {
         netForces += force;
+    }
+    void OnRenderObject()
+    {
+        if (GameObject.Find("GameManager").GetComponent<GameManager>().debugLines)
+        {
+            //velocity
+            GL.PushMatrix();
+            matRed.SetPass(0);
+            GL.Begin(GL.LINES);
+            GL.Vertex(gameObject.transform.position);
+            GL.Vertex(gameObject.transform.position + new Vector3(netForces.x, 0f, netForces.z).normalized * 5.0f);
+            GL.End();
+
+            /*matWhite.SetPass(0);
+            GL.Begin(GL.LINES);
+            GL.Vertex(gameObject.transform.position);
+            GL.Vertex(target);*/
+            GL.End();
+
+            GL.PopMatrix();
+        }
     }
 }

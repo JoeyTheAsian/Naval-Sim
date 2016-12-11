@@ -22,8 +22,7 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		for (int i= 0; i < NumShips; i++) {
-            GameObject g = Instantiate(ship1);
-            ships.Add(g);
+            ships.Add(Instantiate(ship1));
 		}
         Vector3 avgPos = new Vector3(0f, 0f, 0f);
         foreach (GameObject g in ships)
@@ -48,9 +47,9 @@ public class GameManager : MonoBehaviour {
         }
         hordeLeader.GetComponent<ShipAIMovement>().leader = true;
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update() {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             RaycastHit hit;
@@ -62,6 +61,13 @@ public class GameManager : MonoBehaviour {
                 wp.transform.position = new Vector3(wp.transform.position.x, 210f, wp.transform.position.z);
                 waypoints.Add(wp);
             }
+        }
+        if (Input.GetKeyDown(KeyCode.R)) { 
+            foreach(GameObject g in waypoints)
+            {
+                Destroy(g);
+            }
+            waypoints.Clear();
         }
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {

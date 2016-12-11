@@ -190,9 +190,11 @@ MonoBehaviour:
   seaLevel: 191.5
   friction: .100000001
   acceleration: 5
-  maxTurnSpeed: 25
-  topSpeed: 50
+  maxTurnSpeed: 15
+  topSpeed: 24
+  matRed: {fileID: 2100000, guid: 90d2b0bbf51ceb54aa0041e280ece79a, type: 2}
   speedo: {fileID: 0}
+  leader: 0
   controller: {fileID: 14348224}
 --- !u!143 &14348224
 CharacterController:
@@ -240,12 +242,16 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: topSpeed
-      value: 100
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: maxTurnSpeed
-      value: 25
+      value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: matRed
+      value: 
+      objectReference: {fileID: 2100000, guid: 90d2b0bbf51ceb54aa0041e280ece79a, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 173316}

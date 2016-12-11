@@ -38,12 +38,13 @@ public class CameraFollow: MonoBehaviour {
         transform.forward = Vector3.Lerp(transform.forward, new Vector3(target.position.x - transform.position.x, 0f, target.position.z - transform.position.z).normalized, Time.deltaTime * rotationDamping);
         if (!isAerial)
         {
-            transform.Rotate(new Vector3(transform.rotation.x, 0f, 0f));
+            transform.Rotate(new Vector3(transform.rotation.x, 0f, transform.rotation.z));
             transform.LookAt(GameObject.FindWithTag("Player").transform.position);
         }
         else
         {
             transform.LookAt(GameObject.Find("WaterTile").transform.position);
+            transform.rotation = Quaternion.Euler(new Vector3(90f,transform.rotation.y, transform.rotation.z));
         }
 
     }

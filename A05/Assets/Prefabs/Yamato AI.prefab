@@ -189,13 +189,16 @@ MonoBehaviour:
   mass: 1000
   seaLevel: 200
   friction: .100000001
-  acceleration: 5
-  maxTurnSpeed: 25
-  topSpeed: 50
+  acceleration: 10
+  maxTurnSpeed: 15
+  topSpeed: 35
   leader: 0
+  matRed: {fileID: 2100000, guid: 90d2b0bbf51ceb54aa0041e280ece79a, type: 2}
+  matWhite: {fileID: 2100000, guid: ddec896a3e035f645b17e2327b2b6d41, type: 2}
   target: {fileID: 0}
   gameManager: {fileID: 0}
   controller: {fileID: 14350570}
+  nj: {fileID: 0}
 --- !u!143 &14350570
 CharacterController:
   m_ObjectHideFlags: 1
@@ -242,11 +245,23 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: maxTurnSpeed
-      value: 25
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: topSpeed
-      value: 50
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: matWhite
+      value: 
+      objectReference: {fileID: 2100000, guid: ddec896a3e035f645b17e2327b2b6d41, type: 2}
+    - target: {fileID: 0}
+      propertyPath: matRed
+      value: 
+      objectReference: {fileID: 2100000, guid: 90d2b0bbf51ceb54aa0041e280ece79a, type: 2}
+    - target: {fileID: 0}
+      propertyPath: acceleration
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

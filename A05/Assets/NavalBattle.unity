@@ -700,7 +700,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   matRed: {fileID: 0}
   matWhite: {fileID: 0}
-  NumShips: 5
+  NumShips: 20
   debugLines: 0
   ships: []
   waypoints: []
@@ -907,8 +907,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1065925274}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3395.06787, y: 153.502014, z: 2963.42969}
+  m_LocalRotation: {x: .439242393, y: .556468368, z: .449734539, w: -.543275177}
+  m_LocalPosition: {x: 1786.26526, y: -2750.65479, z: 1609.90613}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -994,7 +994,6 @@ GameObject:
   - 4: {fileID: 1524209575}
   - 218: {fileID: 1524209574}
   - 154: {fileID: 1524209573}
-  - 114: {fileID: 1524209572}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -1002,21 +1001,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
   m_IsActive: 1
---- !u!114 &1524209572
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1524209571}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 828b3232de4006a4abac7cfc30b970b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  myTerrainData: {fileID: 0}
-  worldSize: {x: 3000, y: 400, z: 3000}
-  resolution: 1000
-  myTexture: {fileID: 0}
 --- !u!154 &1524209573
 TerrainCollider:
   m_ObjectHideFlags: 0
@@ -1119,7 +1103,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 156592, guid: 74237ca629081af498af3956867f7245, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 156592, guid: 74237ca629081af498af3956867f7245, type: 2}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 74237ca629081af498af3956867f7245, type: 2}
@@ -1146,7 +1134,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1883357334}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2009.67078, y: 3567, z: 1976.23901}
+  m_LocalPosition: {x: 1765.80005, y: 3055.30005, z: 1609.40002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
